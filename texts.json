@@ -1,0 +1,232 @@
+{
+  "emojis": {
+    "machine_offline": "🚫",
+    "payment_issue": "💳",
+    "water_quality": "💦",
+    "technical_issue": "🔧",
+    "emergency": "🆘",
+    "water_info": "💧",
+    "other": "✍️"
+  },
+  "subcategory_emojis": {
+    "machine_offline": {
+      "no_water_flow": "🚰",
+      "ozonator_failure": "💨",
+      "no_lights": "💡"
+    },
+    "payment_issue": {
+      "coin_acceptor_failure": "🪙",
+      "contactless_failure": "💳"
+    },
+    "water_quality": {
+      "too_much_scale": "🫖",
+      "strange_taste": "😵",
+      "chlorine_smell": "🧪",
+      "water_turbidity": "☁️"
+    },
+    "emergency": {
+      "critical_situations": "🚨"
+    }
+  },
+  "level3_emojis": {
+    "no_water_flow": {
+      "no_water_at_all": "🚫",
+      "water_shortage": "📉",
+      "water_flows_slowly": "🐌",
+      "water_not_stopping": "⏸️"
+    },
+    "ozonator_failure": {
+      "ozonator_not_starting": "❌",
+      "no_ozone_smell": "🫧",
+      "burning_smell": "🔥",
+      "ozone_button_not_lit": "🔄"
+    },
+    "no_lights": {
+      "completely_dark": "⚫",
+      "blue_display_not_lit": "🖥️",
+      "contactless_screen_not_lit": "💳",
+      "container_lighting_not_lit": "🏺",
+      "purple_lighting_not_lit": "🟣"
+    },
+    "coin_acceptor_failure": {
+      "ejects_coins": "🔄",
+      "swallows_coins_no_credit": "❌",
+      "coins_stuck": "⛔",
+      "wrong_denomination": "⚠️",
+      "counts_incorrectly": "🧮",
+      "no_fiscal_receipt": "🧾"
+    },
+    "contactless_failure": {
+      "terminal_no_response": "📱",
+      "charges_no_water": "💳",
+      "charges_then_refunds": "💰",
+      "cancelled_but_charged": "❌",
+      "cancelled_not_charged": "✅",
+      "double_charging": "🔄",
+      "no_fiscal_receipt_contactless": "🧾",
+      "slow_processing": "⏳",
+      "black_screen": "🖥️"
+    },
+    "too_much_scale": {
+      "white_residue_container": "🥛",
+      "scale_after_boiling": "♨️"
+    },
+    "strange_taste": {
+      "metallic_taste": "🔩",
+      "salty_taste": "🧂",
+      "bitter_taste": "😖",
+      "chemical_taste": "⚗️"
+    },
+    "chlorine_smell": {
+      "mild_chlorine_smell": "👃",
+      "strong_chlorine_smell": "💨",
+      "chlorine_smell_initial": "🥤",
+      "chlorine_smell_increasing": "📈"
+    },
+    "water_turbidity": {
+      "water_cloudy_immediately": "🌫️",
+      "water_cloudy_later": "⏱️",
+      "particles_in_water": "🔬",
+      "foam_on_surface": "🫧"
+    },
+    "critical_situations": {
+      "electric_shock": "⚡",
+      "water_flood": "💧",
+      "fire_smoke": "🔥",
+      "machine_danger": "🚨"
+    }
+  },
+  "main_menu": {
+    "machine_offline": "Автомат не працює",
+    "payment_issue": "Проблема з оплатою",
+    "water_quality": "Погана якість води",
+    "technical_issue": "Інша технічна проблема",
+    "emergency": "Екстрена допомога",
+    "water_info": "Якість води",
+    "other": "Інше"
+  },
+  "subcategories": {
+    "machine_offline": {
+      "Не працює налив": "no_water_flow",
+      "Не працює озонатор": "ozonator_failure",
+      "Не світиться": "no_lights"
+    },
+    "payment_issue": {
+      "Не працює монетоприймач": "coin_acceptor_failure",
+      "Не працює безконтактна оплата": "contactless_failure"
+    },
+    "water_quality": {
+      "Багато накипу": "too_much_scale",
+      "Є сторонній присмак": "strange_taste",
+      "Є запах хлору": "chlorine_smell",
+      "Мутна вода": "water_turbidity"
+    },
+    "emergency": {
+      "Критичні ситуації": "critical_situations"
+    }
+  },
+  "level3_categories": {
+    "no_water_flow": {
+      "Немає води": "no_water_at_all",
+      "Недоливає": "water_shortage",
+      "Лється дуже повільно": "water_flows_slowly",
+      "Вода не зупиняється": "water_not_stopping"
+    },
+    "ozonator_failure": {
+      "Озонатор не вмикається": "ozonator_not_starting",
+      "Немає запаху озону": "no_ozone_smell",
+      "Запах гарі": "burning_smell",
+      "Кнопка озон не світиться": "ozone_button_not_lit"
+    },
+    "no_lights": {
+      "Повністю темний": "completely_dark",
+      "Не світиться синій дісплей": "blue_display_not_lit",
+      "Не світиться екран безконтактної оплати": "contactless_screen_not_lit",
+      "Не світиться підсвічування тари": "container_lighting_not_lit",
+      "Не світиться фіолетова підсвічування": "purple_lighting_not_lit"
+    },
+    "coin_acceptor_failure": {
+      "Викидає монети": "ejects_coins",
+      "Ковтає монети без зарахування": "swallows_coins_no_credit",
+      "Застрягли монети (заблокований)": "coins_stuck",
+      "Не зараховує певний номінал": "wrong_denomination",
+      "Невірно рахує": "counts_incorrectly",
+      "Не показує фіскальний чек": "no_fiscal_receipt"
+    },
+    "contactless_failure": {
+      "Термінал не реагує на карту/телефон": "terminal_no_response",
+      "Списує гроші, не дає воду": "charges_no_water",
+      "Списує гроші, потім повертає": "charges_then_refunds",
+      "Операція скасована, але гроші списані": "cancelled_but_charged",
+      "Операція скасована, гроші не списані": "cancelled_not_charged",
+      "Подвійне списання": "double_charging",
+      "Не показує фіскальний чек": "no_fiscal_receipt_contactless",
+      "Довго обробляє платіж": "slow_processing",
+      "Чорний екран терміналу": "black_screen"
+    },
+    "too_much_scale": {
+      "Білий наліт на стінках тари": "white_residue_container",
+      "Накип після кип'ятіння": "scale_after_boiling"
+    },
+    "strange_taste": {
+      "Металевий присмак": "metallic_taste",
+      "Солоний присмак": "salty_taste",
+      "Гіркий присмак": "bitter_taste",
+      "Хімічний присмак": "chemical_taste"
+    },
+    "chlorine_smell": {
+      "Слабкий запах хлору": "mild_chlorine_smell",
+      "Сильний запах хлору": "strong_chlorine_smell",
+      "Запах тільки спочатку": "chlorine_smell_initial",
+      "Запах посилюється": "chlorine_smell_increasing"
+    },
+    "water_turbidity": {
+      "Мутна відразу": "water_cloudy_immediately",
+      "Мутніє через час": "water_cloudy_later",
+      "Частинки у воді": "particles_in_water",
+      "Пінка на поверхні": "foam_on_surface"
+    },
+    "critical_situations": {
+      "Ураження електричним струмом": "electric_shock",
+      "Потоп води": "water_flood",
+      "Пожежа/запах диму": "fire_smoke",
+      "Автомат становить небезпеку": "machine_danger"
+    }
+  },
+  "messages": {
+    "welcome": "<b>Вітаємо в службі підтримки 'Чиста вода'!</b>\n\n📍 <b>Автомат:</b> {address}\n\n<i>Оберіть проблему:</i>",
+    "start_without_code": "❌ <b>Для звернення в підтримку відскануйте QR-код на автоматі.</b>\n\n📞 <b>Екстрена служба:</b> {phone}\n🕐 <b>Режим роботи:</b> цілодобово",
+    "machine_not_found": "❌ <b>Автомат з кодом {code} не знайдено в системі.</b>\n\nМожливі причини:\n• Невірний QR-код\n• Автомат ще не додано до системи\n• Технічна помилка\n\n📞 <b>Зверніться до служби підтримки:</b> {phone}",
+    "system_error": "❌ <b>Помилка системи</b>\n\nКод автомата: <code>{code}</code>\nПомилка: {error_message}\n\n📞 <b>Зверніться до служби підтримки:</b> {phone}",
+    "choose_problem_details": "<i>Оберіть тип проблеми:</i>",
+    "choose_specific_problem": "<i>Уточніть проблему:</i>",
+    "problem_chosen": "✅ <b>Проблему зафіксовано:</b> {problem}\n\n<i>Тепер, будь ласка, опишіть проблему детальніше або натисніть 'Пропустити'.</i>",
+    "emergency_help": "🚨 <b>ЕКСТРЕНА ДОПОМОГА</b>\n\n📞 <b>Телефон служби підтримки:</b>\n<a href='tel:{phone}'>{phone}</a>\n\n🕐 <b>Режим роботи:</b> цілодобово\n\n<i>Будь ласка, опишіть проблему детальніше або натисніть 'Пропустити'.</i>",
+    "subcategory_chosen": "✅ <b>Тип проблеми:</b> {subcategory}\n\n<i>Уточніть деталі:</i>",
+    "level3_chosen": "✅ <b>Проблема:</b> {level3_problem}\n\n<i>Опишіть проблему або натисніть 'Пропустити'.</i>",
+    "description_saved": "✅ <b>Опис проблеми збережено!</b>\n\n📞 <b>Поділіться номером телефону:</b>",
+    "request_phone_button": "📞 <b>Будь ласка, натисніть кнопку</b> \"📞 Надіслати номер телефону\" <b>нижче.</b>\n\n<i>Або зверніться напряму до служби підтримки:</i> {phone}",
+    "ticket_created": "✅ <b>Заявка #{ticket_number} прийнята!</b>\nМи вже працюємо над її вирішенням!\n\n<b>Адреса:</b> {address}\n<b>Проблема:</b> {problem_full_text}\n\n<b>Клієнт:</b> {user_name}, 📞 {phone_number}\n<b>Час:</b> {current_time}",
+    "ticket_creation_error": "❌ <b>Помилка створення заявки.</b>\n\nБудь ласка, зверніться напряму до служби підтримки:\n📞 {phone}",
+    "unknown_command": "❓ <b>Невідома команда.</b>\n\nДля звернення в підтримку відскануйте QR-код на автоматі.\n\n📞 <b>Служба підтримки:</b> {phone}",
+    "choose_option": "❓ <b>Будь ласка, оберіть один з варіантів.</b>\n\n📞 <b>Або зверніться до служби підтримки:</b> {phone}",
+    "back_to_main_menu": "📍 <b>Автомат:</b> {address}\n\n<i>Оберіть дію:</i>",
+    "water_quality_info": "💧 <b>ІНФОРМАЦІЯ ПРО ЯКІСТЬ ВОДИ</b>\n\n📋 <i>Оберіть дію:</i>"
+  },
+  "buttons": {
+    "back_to_problem_choice": "🔙 До головного меню",
+    "back_to_subcategory_choice": "🔙 До вибору типу проблеми",
+    "back_to_level3_choice": "🔙 До уточнення проблеми",
+    "skip": "Пропустити",
+    "back": "🔙 Назад",
+    "send_phone": "📞 Надіслати номер телефону"
+  },
+  "admin": {
+    "panel_title": "🔧 <b>Панель адміністратора</b>\n\nОберіть дію:"
+  },
+  "water_quality_menu": {
+    "filter_history": "Історія заміни фільтрів",
+    "water_analysis": "Аналізи води",
+    "back_to_main": "Назад до головного меню"
+  }
+}

@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+venv/.DS_Store
+
+.env
+.env.*
+env.txt
+venv/
+bot_env/
+*.log
