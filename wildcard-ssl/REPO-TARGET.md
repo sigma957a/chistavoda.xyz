@@ -1,4 +1,6 @@
-Целевой репозиторий: https://github.com/sigma957a/wildcard.chistavoda.xyz
+Целевой репозиторий: https://github.com/sigma957a/ssl-wildcard.chistavoda.xyz
 
-Этот каталог в `chistavoda.xyz` — временная копия, пока Cloud Agent не сможет запушить в отдельный empty repo
-(создание репозиториев запрещено токену интеграции; нужен ручной `gh repo create` / кнопка New).
+Имя GitHub ≠ имя certbot. На VPS живой wildcard lineage: `chistavoda.xyz`
+(`/etc/letsencrypt/live/chistavoda.xyz/`). Линейки `ssl-wildcard.chistavoda.xyz` нет.
+
+Этот каталог в `chistavoda.xyz` — временная копия, пока empty repo не создан вручную.

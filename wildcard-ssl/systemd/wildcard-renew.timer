@@ -1,6 +1,6 @@
 [Unit]
 Description=Daily timer: wildcard SSL renew (skip if >30 days left)
-Documentation=https://github.com/sigma957a/wildcard.chistavoda.xyz
+Documentation=https://github.com/sigma957a/ssl-wildcard.chistavoda.xyz
 
 [Timer]
 OnCalendar=daily

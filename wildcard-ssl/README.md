@@ -1,8 +1,21 @@
-# wildcard.chistavoda.xyz
+# ssl-wildcard.chistavoda.xyz
 
 Одна команда для продления Let’s Encrypt **wildcard** SSL: `chistavoda.xyz` + `*.chistavoda.xyz` через **Fornex DNS-01**.
 
-На проде VPS сертификат уже один раз продлили вручную с `FORNEX_API`. Этот репозиторий делает тот же процесс **повторяемым**.
+Репозиторий: <https://github.com/sigma957a/ssl-wildcard.chistavoda.xyz>
+
+На проде VPS сертификат уже один раз продлили с `FORNEX_API`. Этот репозиторий делает тот же процесс **повторяемым**.
+
+## Имя сертификата на VPS
+
+`certbot certificates` (проверено 2026-10-31):
+
+| Certificate Name | Domains | Live path |
+|------------------|---------|-----------|
+| **`chistavoda.xyz`** | `chistavoda.xyz`, `*.chistavoda.xyz` | `/etc/letsencrypt/live/chistavoda.xyz/` |
+| `block.chistavoda.xyz` | только `block…` (отдельный) | не wildcard |
+
+Линейки `ssl-wildcard.chistavoda.xyz` на диске **нет** — это **имя GitHub-репозитория**, не имя certbot. Скрипт по умолчанию берёт живой lineage `chistavoda.xyz` (или то, что зададите в `CERT_NAME`).
 
 ## Что покрывает
 
@@ -11,7 +24,7 @@
 - `chistavoda.xyz`
 - `*.chistavoda.xyz`
 
-Все поддомены (`block`, `a`, `monitor`, `osmo`, `terminal`, `telegram-bot-support`, `www`, `mail`, …) используют этот wildcard (если сайт не на отдельном cert).
+Все поддомены (`block` может быть на своём cert; остальные — `a`, `monitor`, `osmo`, `terminal`, `telegram-bot-support`, `www`, `mail`, …) используют этот wildcard.
 
 ## Требования
 
@@ -25,8 +38,8 @@
 ## Установка
 
 ```bash
-git clone https://github.com/sigma957a/wildcard.chistavoda.xyz.git
-cd wildcard.chistavoda.xyz
+git clone https://github.com/sigma957a/ssl-wildcard.chistavoda.xyz.git
+cd ssl-wildcard.chistavoda.xyz
 chmod +x renew-wildcard.sh hooks/*.sh
 # опционально:
 sudo make install-hooks   # → /usr/local/sbin/renew-wildcard
@@ -44,7 +57,8 @@ sudo apt-get install -y certbot curl python3 openssl dnsutils
 | Переменная | Обязательно | Описание |
 |------------|-------------|----------|
 | `FORNEX_API` | да | токен Fornex (`Authorization: Api-Key …`) |
-| `DOMAIN` | нет | по умолчанию `chistavoda.xyz` |
+| `DOMAIN` | нет | DNS-зона / apex, по умолчанию `chistavoda.xyz` |
+| `CERT_NAME` | нет | имя lineage certbot; авто: `ssl-wildcard.$DOMAIN` → `$DOMAIN` |
 | `EMAIL` | нет | email для Let’s Encrypt |
 | `RENEW_DAYS` | нет | окно продления, по умолчанию `30` |
 | `FORCE` | нет | `1` — продлить даже если дней хватает |
@@ -63,12 +77,13 @@ read -s FORNEX_API && export FORNEX_API
 ```bash
 export FORNEX_API='…'
 # export EMAIL='ops@example.com'
+# export CERT_NAME='chistavoda.xyz'
 ```
 
 ## Одна команда
 
 ```bash
-cd /path/to/wildcard.chistavoda.xyz
+cd /path/to/ssl-wildcard.chistavoda.xyz
 sudo -E ./renew-wildcard.sh
 # или:
 sudo -E make renew

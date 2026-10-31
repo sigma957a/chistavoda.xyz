@@ -8,13 +8,18 @@
 #   CHECK_ONLY=1 ./renew-wildcard.sh
 #
 # Env:
-#   DOMAIN=chistavoda.xyz
+#   DOMAIN=chistavoda.xyz          # apex + DNS zone (SAN: DOMAIN + *.DOMAIN)
+#   CERT_NAME=...                  # certbot lineage name (auto-detected if unset)
 #   FORNEX_API | FORNEX_API_TOKEN | FORNEX_API_KEY
 #   EMAIL=...                      # optional (certbot register / notifications)
 #   RENEW_DAYS=30                  # skip renew if more days left (unless FORCE=1)
-#   LIVE_PATH=/etc/letsencrypt/live/$DOMAIN
+#   LIVE_PATH=/etc/letsencrypt/live/$CERT_NAME
 #   SYNC_HESTIA=1                  # sync Hestia PEM copies after success (default 1)
 #   RELOAD_NGINX=1                 # nginx -t && reload (default 1)
+#
+# Repo: https://github.com/sigma957a/ssl-wildcard.chistavoda.xyz
+# On production VPS (2026-10-31) certbot lineage for the wildcard is named
+# "chistavoda.xyz" (not "ssl-wildcard.chistavoda.xyz"). Prefer that live name.
 
 set -euo pipefail
 
@@ -27,12 +32,35 @@ EMAIL="${EMAIL:-}"
 RENEW_DAYS="${RENEW_DAYS:-30}"
 FORCE="${FORCE:-0}"
 CHECK_ONLY="${CHECK_ONLY:-0}"
-LIVE_PATH="${LIVE_PATH:-/etc/letsencrypt/live/${DOMAIN}}"
-CERT_NAME="${CERT_NAME:-$DOMAIN}"
 STATE_DIR="${STATE_DIR:-/var/lib/wildcard-ssl}"
 RELOAD_NGINX="${RELOAD_NGINX:-1}"
 SYNC_HESTIA="${SYNC_HESTIA:-1}"
 ACME_SERVER="${ACME_SERVER:-https://acme-v02.api.letsencrypt.org/directory}"
+
+# Resolve certbot certificate name / live path.
+# Prefer explicit CERT_NAME; else first existing among candidates.
+resolve_cert_name() {
+  if [[ -n "${CERT_NAME:-}" ]]; then
+    printf '%s' "$CERT_NAME"
+    return 0
+  fi
+  local candidate
+  for candidate in \
+      "ssl-wildcard.${DOMAIN}" \
+      "${DOMAIN}" \
+      "wildcard.${DOMAIN}"; do
+    if [[ -f "/etc/letsencrypt/live/${candidate}/fullchain.pem" ]] \
+        || [[ -f "/etc/letsencrypt/renewal/${candidate}.conf" ]]; then
+      printf '%s' "$candidate"
+      return 0
+    fi
+  done
+  # Default lineage name used on production today:
+  printf '%s' "$DOMAIN"
+}
+
+CERT_NAME="$(resolve_cert_name)"
+LIVE_PATH="${LIVE_PATH:-/etc/letsencrypt/live/${CERT_NAME}}"
 
 AUTH_HOOK="${ROOT}/hooks/fornex-auth.sh"
 CLEANUP_HOOK="${ROOT}/hooks/fornex-cleanup.sh"
@@ -230,6 +258,8 @@ main() {
     die "run as root (sudo). Example: sudo -E ./renew-wildcard.sh"
   fi
 
+  log "DOMAIN=${DOMAIN} CERT_NAME=${CERT_NAME} LIVE_PATH=${LIVE_PATH}"
+
   preflight_deps
   preflight_api
 
@@ -237,6 +267,7 @@ main() {
   if cert_status; then
     need_renew=1
   fi
+
 
   if [[ "$CHECK_ONLY" == "1" ]]; then
     if [[ "$need_renew" -eq 1 ]]; then

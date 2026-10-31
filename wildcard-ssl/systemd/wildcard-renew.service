@@ -1,6 +1,6 @@
 [Unit]
 Description=Renew chistavoda.xyz wildcard Let’s Encrypt via Fornex DNS-01
-Documentation=https://github.com/sigma957a/wildcard.chistavoda.xyz
+Documentation=https://github.com/sigma957a/ssl-wildcard.chistavoda.xyz
 After=network-online.target
 Wants=network-online.target
 
