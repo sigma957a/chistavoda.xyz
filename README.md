@@ -27,3 +27,8 @@ python main.py
 ## Деплой
 
 Production-версия (v8+) работает на Fornex: `telegram-bot-support.chistavoda.xyz` (ветка `fornex-refactoring-5` в исходном репозитории).
+
+## SSL (Fornex)
+
+Wildcard Let’s Encrypt для `chistavoda.xyz` / `*.chistavoda.xyz` (в т.ч. `block.chistavoda.xyz`) обслуживается на VPS Fornex, не в этом репо.  
+Симптомы просрочки и шаги продления: [`docs/md/ssl_fornex_renewal.md`](docs/md/ssl_fornex_renewal.md).
