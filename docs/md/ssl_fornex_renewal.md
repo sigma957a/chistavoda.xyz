@@ -1,76 +1,82 @@
-# SSL на Fornex: `chistavoda.xyz` / `block.chistavoda.xyz`
+# SSL на Fornex: `chistavoda.xyz` / `*.chistavoda.xyz`
 
-## Симптом (окт 2026)
+## Инвентарь на VPS (окт 2026)
 
-Браузер не открывает `https://block.chistavoda.xyz` (ошибка сертификата / «нет SSL»).  
-Фактически: сайт на nginx **жив**, HTTP отвечает `301 → https://…`, на 443 отдаётся **просроченный** Let’s Encrypt wildcard.
+### Certbot
 
-## Диагностика (проверено снаружи)
+| Cert name | Domains | Path | Статус |
+|-----------|---------|------|--------|
+| `chistavoda.xyz` | `chistavoda.xyz`, `*.chistavoda.xyz` | `/etc/letsencrypt/live/chistavoda.xyz/` | **EXPIRED** (нужен DNS-01 renew) |
+| `block.chistavoda.xyz` | `block.chistavoda.xyz` | `/etc/letsencrypt/live/block.chistavoda.xyz/` | VALID (временный HTTP-01, пока wildcard мёртв) |
 
-| Проверка | Результат |
-|----------|-----------|
-| DNS | NS Fornex (`ns1–4.fornex.com`), A-запись на VPS, Cloudflare **не** используется |
-| HTTP `:80` | nginx, `301` на HTTPS |
-| HTTPS `:443` | TLS 1.3 handshake OK, контент отдаётся (UI «Управление роутером») |
-| Сертификат | CN=`chistavoda.xyz`, SAN=`*.chistavoda.xyz` + `chistavoda.xyz` |
-| Срок | `notBefore=2026-07-05`, **`notAfter=2026-10-03`** → **expired** |
-| Эмитент | Let’s Encrypt YE1 (ECDSA) |
+### nginx `server_name` → `ssl_certificate`
 
-Тот же просроченный wildcard ломает и apex, и другие поддомены на этом IP (в т.ч. `telegram-bot-support.chistavoda.xyz`).
+| server_name | cert |
+|-------------|------|
+| `a.chistavoda.xyz` | LE wildcard `chistavoda.xyz` |
+| `block.chistavoda.xyz` | LE `block.chistavoda.xyz` (отдельный) |
+| `chistavoda.xyz` `www.chistavoda.xyz` | Hestia PEM **и** LE wildcard (оба) |
+| `monitor.chistavoda.xyz` | LE wildcard |
+| `osmo.chistavoda.xyz` | LE wildcard |
+| `telegram-bot-support.chistavoda.xyz` | LE wildcard |
+| `terminal.chistavoda.xyz` | LE wildcard |
+| `webmail.chistavoda.xyz` `mail.chistavoda.xyz` | Hestia mail PEM (тоже wildcard SAN, **expired**) |
+| `osmex.cz` `www.osmex.cz` | отдельный Hestia PEM (не Чиста вода) |
+| `274884.fornex.cloud` | сертификат хоста Fornex |
 
-В этом репозитории **нет** nginx/certbot/Caddy/Vercel-конфига для `block.*` — только Telegram-бот. Исправление TLS делается **на сервере Fornex**, не merge’ем кода приложения.
+DNS зоны Hestia **нет**; NS = `ns1–4.fornex.com`. Cloudflare для зоны не используется.
 
-## Корневая причина
+## Корневая причина wildcard
 
-Автопродление Let’s Encrypt для wildcard (`*.chistavoda.xyz`) не сработало (или не было настроено). Wildcard требует **DNS-01**, не HTTP-01. После `2026-10-03` клиенты отвергают сертификат.
+Renewal config:
 
-Сообщение пользователя «нет ключа/сертификата» обычно = ошибка TLS в UI; файлы на сервере, скорее всего, на месте, но **просрочены**.
+- `authenticator = manual`
+- `pref_challs = dns-01`
+- раньше `manual_auth_hook = /tmp/auth_hook.sh` (**файл пропал** → `certbot renew` падал)
 
-## Что сделать на VPS (нужен SSH / панель Fornex)
+Без DNS API Fornex на сервере автопродление wildcard невозможно. Скрипты в `telegram-bot-support…/deploy/fornex_get_wildcard_cert.sh` — только **интерактивный** DNS-01.
 
-1. Зайти на VPS Fornex, где крутится nginx для `chistavoda.xyz`.
-2. Проверить текущие сертификаты:
-   ```bash
-   sudo certbot certificates
-   # или пути вида:
-   sudo ls -la /etc/letsencrypt/live/chistavoda.xyz/
-   sudo nginx -T 2>/dev/null | grep -E 'ssl_certificate|server_name'
-   ```
-3. Продлить wildcard (DNS-01). Вариант A — если уже есть DNS-плагин / hook Fornex:
-   ```bash
-   sudo certbot renew --dry-run
-   sudo certbot renew
-   sudo nginx -t && sudo systemctl reload nginx
-   ```
-   Вариант B — вручную (если renew падает):
-   ```bash
-   sudo certbot certonly --manual --preferred-challenges dns \
-     -d chistavoda.xyz -d '*.chistavoda.xyz' \
-     --cert-name chistavoda.xyz
-   ```
-   Certbot покажет TXT `_acme-challenge.chistavoda.xyz` — добавить в DNS Fornex, дождаться распространения, подтвердить. Затем reload nginx.
-4. Если SSL ведётся только через панель Fornex: SSL/Let’s Encrypt → renew / reissue для `chistavoda.xyz` + `*.chistavoda.xyz`, привязать к тому же vhost.
-5. Проверка с любой машины:
+## Как продлить wildcard (предпочтительный путь)
+
+На VPS уже стоят durable hooks:
+
+- auth: `/usr/local/bin/chistavoda-acme-auth-hook.sh`
+- cleanup: `/usr/local/bin/chistavoda-acme-cleanup-hook.sh`
+- state: `/var/lib/chistavoda-ops/acme-challenge.txt`
+- сигнал: `chistavoda-acme-mark-ready.sh` → `touch /var/lib/chistavoda-ops/acme-ready`
+
+```bash
+sudo certbot renew --cert-name chistavoda.xyz --no-random-sleep-on-renew
+# хук запишет TXT в /var/lib/chistavoda-ops/acme-challenge.txt и будет ждать
+```
+
+1. Панель Fornex → DNS `chistavoda.xyz` → TXT:
+   - host: `_acme-challenge`
+   - value: из `acme-challenge.txt` (поле `validation` / `value`)
+2. Проверка: `dig +short TXT _acme-challenge.chistavoda.xyz @ns1.fornex.com`
+3. `sudo chistavoda-acme-mark-ready.sh`
+4. Certbot может запросить **второй** TXT (для `*.chistavoda.xyz`) — обновите/добавьте второе значение на том же имени, снова `mark-ready`.
+5. `sudo nginx -t && sudo systemctl reload nginx`
+6. Проверка:
    ```bash
    echo | openssl s_client -connect block.chistavoda.xyz:443 -servername block.chistavoda.xyz 2>/dev/null \
      | openssl x509 -noout -dates -ext subjectAltName
-   curl -sI https://block.chistavoda.xyz/
    ```
-   Ожидание: `notAfter` в будущем, `curl` без `SSL certificate problem`.
 
-## Автопродление (чтобы не повторилось)
+После успешного wildcard имеет смысл снова указать `block` на  
+`/etc/letsencrypt/live/chistavoda.xyz/{fullchain,privkey}.pem` и удалить отдельный cert `block.chistavoda.xyz`, либо оставить как есть.
 
-- Убедиться, что `certbot.timer` / cron активен: `systemctl status certbot.timer`.
-- Для wildcard DNS-01 нужен рабочий DNS API / hook (Fornex DNS API или скрипт обновления TXT).
-- После renew: `deploy-hook` → `nginx -t && systemctl reload nginx`.
-- Алерт за ~14 дней до expiry (мониторинг или `certbot renew --dry-run` в CI/cron с уведомлением).
+## Другие просроченные PEM (Hestia)
 
-## Чего здесь нет
+| Файл | notAfter | Примечание |
+|------|----------|------------|
+| `/home/admin/conf/web/chistavoda.xyz/ssl/chistavoda.xyz.pem` | 2026-02-11 | apex/www; `v-add-letsencrypt-domain` падает: ACME HTTP→HTTPS 404 |
+| `/home/admin/conf/mail/chistavoda.xyz/ssl/chistavoda.xyz.pem` | 2026-06-22 | mail/webmail; после wildcard — скопировать LE fullchain/key сюда или включить LE в Hestia |
 
-- Доступа к SSH, паролям, API-ключам DNS, панели Fornex из этого агента.
-- Конфигов reverse-proxy в git для `block.chistavoda.xyz`.
-- Cloudflare (зона на Fornex NS) — смена SSL mode в Cloudflare **не** поможет.
+`osmex.cz` и `274884.fornex.cloud` валидны до ~2026-12-03 — не трогать без нужды.
 
-## Связанный деплой бота
+## Чего нет на сервере
 
-Production-бот: `telegram-bot-support.chistavoda.xyz` на том же Fornex (см. `README.md`). После продления wildcard HTTPS для бота тоже должен снова валидироваться.
+- Fornex DNS API token / certbot DNS plugin
+- Hestia DNS zone для `chistavoda.xyz`
+- Рабочий `/tmp/auth_hook.sh` (заменён на `/usr/local/bin/chistavoda-acme-*.sh`)
