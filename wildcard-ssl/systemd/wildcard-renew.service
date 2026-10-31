@@ -1,0 +1,14 @@
+[Unit]
+Description=Renew chistavoda.xyz wildcard Let’s Encrypt via Fornex DNS-01
+Documentation=https://github.com/sigma957a/wildcard.chistavoda.xyz
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Put FORNEX_API=... in this file (chmod 600). Never commit the file.
+EnvironmentFile=-/root/.config/wildcard-ssl.env
+Environment=DOMAIN=chistavoda.xyz
+# Install path after `make install-hooks`, or point to a clone:
+ExecStart=/usr/local/sbin/renew-wildcard
+Nice=10
