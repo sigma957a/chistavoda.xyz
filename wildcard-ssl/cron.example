@@ -1,0 +1,6 @@
+# /etc/cron.d/wildcard-ssl-renew
+# Requires /root/.config/wildcard-ssl.env with FORNEX_API=... (chmod 600)
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+15 4 * * * root set -a; . /root/.config/wildcard-ssl.env; set +a; /usr/local/sbin/renew-wildcard >>/var/log/wildcard-ssl-renew.log 2>&1
